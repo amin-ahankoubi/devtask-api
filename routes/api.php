@@ -7,9 +7,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-//Route::get('/tasks', function () {
-//    return \App\Models\Task::all();
-//});
 
 use App\Http\Controllers\Api\TaskController;
 
