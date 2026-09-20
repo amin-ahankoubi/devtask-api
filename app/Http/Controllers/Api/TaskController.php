@@ -6,37 +6,36 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
     public function index()
     {
         return TaskResource::collection(
-            \App\Models\Task::all()
+            Task::all()
         );
     }
 
     public function store(StoreTaskRequest $request)
     {
-        $task = \App\Models\Task::create(
+        $task = Task::create(
             $request->validated()
         );
 
         return new TaskResource($task);
     }
 
-    public function update(UpdateTaskRequest $request, int $id)
+    public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task = \App\Models\Task::findOrFail($id);
 
         $task->update($request->validated());
 
         return new TaskResource($task);
     }
 
-    public function destroy(int $id)
+    public function destroy(Task $task)
     {
-        $task = \App\Models\Task::findOrFail($id);
 
         $task->delete();
 
