@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\StoreTaskRequest;
+
+use App\Http\Requests\UpdateTaskRequest;
+
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -12,30 +17,20 @@ class TaskController extends Controller
         return \App\Models\Task::all();
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'status' => 'required|in:todo,in-progress,done',
-            'priority' => 'required|in:low,medium,high',
-        ]);
-
-        $task = \App\Models\Task::create($validated);
+        $task = \App\Models\Task::create(
+            $request->validated()
+        );
 
         return $task;
     }
 
-    public function update(Request $request, int $id)
+    public function update(UpdateTaskRequest $request, int $id)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'status' => 'required|in:todo,in-progress,done',
-            'priority' => 'required|in:low,medium,high',
-        ]);
-
         $task = \App\Models\Task::findOrFail($id);
 
-        $task->update($validated);
+        $task->update($request->validated());
 
         return $task;
     }
