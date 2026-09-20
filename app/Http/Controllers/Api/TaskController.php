@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\StoreTaskRequest;
-
-use App\Http\Requests\UpdateTaskRequest;
-
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        return \App\Models\Task::all();
+        return TaskResource::collection(
+            \App\Models\Task::all()
+        );
     }
 
     public function store(StoreTaskRequest $request)
@@ -23,7 +22,7 @@ class TaskController extends Controller
             $request->validated()
         );
 
-        return $task;
+        return new TaskResource($task);
     }
 
     public function update(UpdateTaskRequest $request, int $id)
@@ -32,7 +31,7 @@ class TaskController extends Controller
 
         $task->update($request->validated());
 
-        return $task;
+        return new TaskResource($task);
     }
 
     public function destroy(int $id)
@@ -43,6 +42,6 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task deleted successfully',
-        ]);
+        ], 200);
     }
 }
