@@ -28,6 +28,18 @@ class TaskFilterRequest extends FormRequest
 
             'sort' => 'sometimes|in:created_at,title,priority,status',
             'direction' => 'sometimes|in:asc,desc',
+
+            'search' => 'sometimes|string|max:100',
+
+            'per_page' => 'sometimes|integer|min:1|max:100',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'sort' => $this->sort ?? 'created_at',
+            'direction' => $this->direction ?? 'desc',
+        ]);
     }
 }

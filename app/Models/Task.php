@@ -37,6 +37,15 @@ class Task extends Model
             })
             ->when($filters['priority'] ?? null, function ($query, $priority) {
                 $query->priority($priority);
+            })
+            ->when($filters['search'] ?? null, function ($query, $search) {
+                $query->search($search);
             });
+
+    }
+
+    public function scopeSearch($query, string $search)
+    {
+        return $query->where('title', 'like', "%{$search}%");
     }
 }

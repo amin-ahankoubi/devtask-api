@@ -15,13 +15,11 @@ class TaskController extends Controller
     {
         $filters = $request->validated();
 
-        $sort = $filters['sort'] ?? 'created_at';
-        $direction = $filters['direction'] ?? 'desc';
-
         $tasks = Task::query()
             ->filter($filters)
-            ->orderedBy($sort, $direction)
-            ->paginate(2);
+            ->orderedBy($filters['sort'], $filters['direction'])
+            ->paginate($filters['per_page'] ?? 10)
+            ->withQueryString();
 
         return TaskResource::collection($tasks);
     }
@@ -48,8 +46,6 @@ class TaskController extends Controller
 
         $task->delete();
 
-        return response()->json([
-            'message' => 'Task deleted successfully',
-        ], 200);
+        return response()->noContent();
     }
 }
