@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
@@ -25,13 +26,10 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
+        $validated = $request->validated();
+        
         if (
             !Auth::attempt([
                 'email' => $validated['email'],
@@ -63,5 +61,5 @@ class AuthController extends Controller
         ]);
     }
 
-    
+
 }
